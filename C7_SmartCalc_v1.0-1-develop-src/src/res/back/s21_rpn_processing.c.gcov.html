@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - back/s21_rpn_processing.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">back</a> - s21_rpn_processing.c<span style="font-size: 80%;"> (source / <a href="s21_rpn_processing.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">43</td>
+            <td class="headerCovTableEntry">43</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2023-11-07 16:21:33</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #include &quot;../s21_smart_calc.h&quot;</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span> <span class="tlaGNC tlaBgGNC">          21 : int s21_rpn_processing(stack_node** stack_node_ptr, stack_node** output) {</span></span>
+<span id="L4"><span class="lineNum">       4</span> <span class="tlaGNC">          21 :   stack_node* op = NULL;</span></span>
+<span id="L5"><span class="lineNum">       5</span> <span class="tlaGNC">          21 :   stack_node* rev = NULL;</span></span>
+<span id="L6"><span class="lineNum">       6</span> <span class="tlaGNC">          21 :   double value = 0;</span></span>
+<span id="L7"><span class="lineNum">       7</span> <span class="tlaGNC">          21 :   int err = OK;</span></span>
+<span id="L8"><span class="lineNum">       8</span> <span class="tlaGNC">          21 :   rev = reverse_stack(stack_node_ptr, rev);</span></span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC">         465 :   while (rev != NULL) {</span></span>
+<span id="L10"><span class="lineNum">      10</span> <span class="tlaGNC">         444 :     if ((rev)-&gt;type == NUMBER) {</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">         107 :       value = (rev)-&gt;number;</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         107 :       s21_push(output, value, NUMBER, 0);</span></span>
+<span id="L13"><span class="lineNum">      13</span> <span class="tlaGNC">         107 :       s21_pop(&amp;rev);</span></span>
+<span id="L14"><span class="lineNum">      14</span>              :     } else {</span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         337 :       if (op == NULL || rev-&gt;type == OP_BRAC) {</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">         114 :         s21_push(&amp;op, 0, (rev)-&gt;type, (rev)-&gt;priority);</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">         114 :         s21_pop(&amp;rev);</span></span>
+<span id="L18"><span class="lineNum">      18</span>              :       } else {</span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         223 :         op_priority(&amp;rev, &amp;op, output);</span></span>
+<span id="L20"><span class="lineNum">      20</span>              :       }</span>
+<span id="L21"><span class="lineNum">      21</span>              :     }</span>
+<span id="L22"><span class="lineNum">      22</span>              :   }</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          41 :   while (op != NULL) {</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          20 :     s21_push(output, 0, op-&gt;type, op-&gt;priority);</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          20 :     s21_pop(&amp;op);</span></span>
+<span id="L26"><span class="lineNum">      26</span>              :   }</span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          21 :   rev = reverse_stack(output, rev);</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          21 :   *stack_node_ptr = reverse_stack(&amp;rev, *stack_node_ptr);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          21 :   *output = reverse_stack(stack_node_ptr, *output);</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          21 :   printf(&quot;Вышел из рпн\n&quot;);</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          21 :   return err;</span></span>
+<span id="L32"><span class="lineNum">      32</span>              : }</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         223 : int op_priority(stack_node** snp, stack_node** op, stack_node** output) {</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         223 :   if (((*snp)-&gt;priority &gt; (*op)-&gt;priority) &amp;&amp; (*snp)-&gt;priority != 1) {</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          97 :     s21_push(op, 0, (*snp)-&gt;type, (*snp)-&gt;priority);</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          97 :     s21_pop(snp);</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         126 :   } else if ((*snp)-&gt;type == CLOSE_BRAC) {</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          76 :     s21_pop(snp);</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         141 :     while ((*op)-&gt;type != OP_BRAC) {</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          65 :       s21_push(output, 0, (*op)-&gt;type, (*op)-&gt;priority);</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          65 :       s21_pop(op);</span></span>
+<span id="L43"><span class="lineNum">      43</span>              :     }</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          76 :     if ((*op)-&gt;type == OP_BRAC) {</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          76 :       s21_pop(op);</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :     }</span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          50 :   } else if (((*snp)-&gt;priority &lt;= (*op)-&gt;priority)) {</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          50 :     s21_push(output, 0, (*op)-&gt;type, (*op)-&gt;priority);</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          50 :     s21_pop(op);</span></span>
+<span id="L50"><span class="lineNum">      50</span>              :   }</span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         223 :   return OK;</span></span>
+<span id="L52"><span class="lineNum">      52</span>              : }</span>
+<span id="L53"><span class="lineNum">      53</span>              : </span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          84 : stack_node* reverse_stack(stack_node** input, stack_node* out) {</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">        1204 :   while (*input != NULL) {</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">        1120 :     s21_push(&amp;out, (*input)-&gt;number, (*input)-&gt;type, (*input)-&gt;priority);</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        1120 :     s21_pop(input);</span></span>
+<span id="L58"><span class="lineNum">      58</span>              :   }</span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          84 :   return out;</span></span>
+<span id="L60"><span class="lineNum">      60</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
