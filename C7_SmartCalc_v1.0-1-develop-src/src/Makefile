@@ -6,6 +6,8 @@ FILES= $(wildcard *.c)
 OBJ= $(patsubst %.c,%.o,$(wildcard *.c))
 OS = $(shell uname -s)
 TEST_FILE = $(wildcard tests/*.c)
+BACK_DIR = back
+BACK_SRC = $(wildcard $(BACK_DIR)/*.c)
 
 OS = $(shell uname -s)
 ifeq ($(OS),Linux)
@@ -14,6 +16,22 @@ endif
 ifeq ($(OS),Darwin)
 	OPEN_CMD = open
 endif
+
+ifeq ($(OS),Windows_NT)
+    LIB_NAME = s21_smart_calc.dll
+    DYNAMIC_FLAGS = -shared
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        LIB_NAME = libs21_smart_calc.so
+        DYNAMIC_FLAGS = -shared -fPIC
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        LIB_NAME = libs21_smart_calc.dylib
+        DYNAMIC_FLAGS = -dynamiclib -fPIC
+    endif
+endif
+
 
 all: clean install dist test dvi run
 
@@ -28,6 +46,9 @@ s21_smart_calc.a:
 	ar rcs s21_smart_calc.a *.o
 	ranlib s21_smart_calc.a
 	rm -rf *.o
+
+dynamic_library:
+	$(GCC) $(FLAGS) -shared back/*.c -o s21_smart_calc.dll -lm
 
 uninstall:
 	rm -rf build
